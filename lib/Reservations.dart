@@ -184,7 +184,6 @@ class _ReservationsState extends State<Reservations> {
               (item) => '${item.firstName} ${item.lastName}' == selectedItem);
       return Center(child:
       Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
