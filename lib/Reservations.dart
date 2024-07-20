@@ -184,14 +184,40 @@ class _ReservationsState extends State<Reservations> {
               (item) => '${item.firstName} ${item.lastName}' == selectedItem);
       return Center(child:
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Name: ${reserved[rowNum].firstName} ${reserved[rowNum].lastName}\n'
-              'Flight: ${reserved[rowNum].flight}\n'
-              'Departure City: ${reserved[rowNum].departure}\n'
-              'Destination City: ${reserved[rowNum].destination}\n'
-              'Takeoff Time: ${reserved[rowNum].takeOff}\n'
-              'Arrival Time: ${reserved[rowNum].arrival}\n'
-              'Day: ${reserved[rowNum].date}'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Column for headers
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.of(context)?.translate('name') ?? 'Name:'),
+                Text(AppLocalizations.of(context)?.translate('flight') ?? 'Flight:'),
+                Text(AppLocalizations.of(context)?.translate('destination') ?? 'Departure City:'),
+                Text(AppLocalizations.of(context)?.translate('departure') ?? 'Destination City:'),
+                Text(AppLocalizations.of(context)?.translate('start_time') ?? 'Takeoff Time:'),
+                Text(AppLocalizations.of(context)?.translate('end_time') ?? 'Arrival Time:'),
+                Text(AppLocalizations.of(context)?.translate('date') ?? 'Day:'),
+              ],
+            ),
+            SizedBox(width: 16.0), // Space between columns
+            // Column for values
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${reserved[rowNum].firstName} ${reserved[rowNum].lastName}'),
+                Text(reserved[rowNum].flight),
+                Text(reserved[rowNum].departure),
+                Text(reserved[rowNum].destination),
+                Text(reserved[rowNum].takeOff),
+                Text(reserved[rowNum].arrival),
+                Text(reserved[rowNum].date),
+              ],
+            ),
+          ],
+        ),
           Padding(padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
                 onPressed: () {
