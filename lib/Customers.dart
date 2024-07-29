@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed( context, '/newCust' );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed:buttonClicked,
                         child: Text ("Add new customer")
                     ),
+
                   ],
                 ),
               ),

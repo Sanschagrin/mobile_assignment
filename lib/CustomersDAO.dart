@@ -10,8 +10,8 @@ abstract class CustomersDAO{ //no function body
   @delete //generate the deletion statement
   Future<int> deleteItem(CustomerRecord itm);
 
-  @Query('Select * from ToDoItem')
-  Future<List<CustomerRecord>> getAllItems();
+  @Query('Select * from CustomerRecord')
+  Future<List<CustomerRecord>> getAllRecords();
 
   @update
   Future<int> updateItem(CustomerRecord itm);
