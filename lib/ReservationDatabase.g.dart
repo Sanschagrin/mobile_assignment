@@ -82,7 +82,7 @@ class _$ReservationDatabase extends ReservationDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -99,6 +99,8 @@ class _$ReservationDatabase extends ReservationDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ReservationList` (`id` INTEGER NOT NULL, `flight` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `destination` TEXT NOT NULL, `departure` TEXT NOT NULL, `takeOff` TEXT NOT NULL, `arrival` TEXT NOT NULL, `date` TEXT NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `CustomerRecord` (`id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `postalCode` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `birthday` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },

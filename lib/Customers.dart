@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 //class imports
+import 'CustomerRecord.dart';
+import 'CustomersDAO.dart';
+import 'CustomersDatabase.dart';
 import 'NewCustomer.dart';
 
 class Customers extends StatelessWidget {
@@ -32,8 +35,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late CustomersDAO myDAO;
+  List<CustomerRecord> customers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCustomers();
+  }
+
+  void _loadCustomers() async {
+    final database = await $FloorCustomersDatabase.databaseBuilder('app_database.db').build();
+    myDAO = database.getDao;
+    final customerList = await myDAO.getAllRecords();
+    setState(() {
+      customers = customerList;
+    });
+  }
   void buttonClicked() {
-    Navigator.pushNamed( context, '/newCust' );
+    Navigator.pushNamed( context, '/newCust' ).then((_){
+      _loadCustomers(); //reload the customers after coming back from creating new ones
+    });
   }
 
 
@@ -56,10 +78,21 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed:buttonClicked,
                         child: Text ("Add new customer")
                     ),
-
                   ],
                 ),
               ),
+              Expanded(
+              child: ListView.builder(
+                itemCount: customers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final customer = customers[index];
+                  return ListTile(
+                      title: Text("${customer.firstName} ${customer.lastName}"),
+                      subtitle: Text(customer.address)
+                  );
+                }
+              )
+              )
             ]
         ),
       ),

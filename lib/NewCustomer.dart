@@ -78,7 +78,7 @@ class NewCustomerState extends State<NewCustomer> {
     });
   }
 
-  void addCustomer() {
+  Future<void> addCustomer() async {
     //if all fields are full, then add customer record to list
     if (_controller_Fname.text.isNotEmpty && _controller_Lname.text.isNotEmpty && _controller_address.text.isNotEmpty &&
     _controller_postalCode.text.isNotEmpty && _controller_postalCode.text.isNotEmpty && _controller_city.text.isNotEmpty &&
@@ -93,9 +93,12 @@ class NewCustomerState extends State<NewCustomer> {
         _controller_country.text,
         _controller_birthday.text
       );
+
+      await myDAO.insertItem(newCustomer); // Insert customer into database
       setState(() {
         customer.add(newCustomer);
       });
+      Navigator.pop(context);
     }
     else
       showDialog(
