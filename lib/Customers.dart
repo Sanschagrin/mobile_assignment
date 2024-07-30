@@ -53,11 +53,29 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   void buttonClicked() {
-    Navigator.pushNamed( context, '/newCust' ).then((_){
-      _loadCustomers(); //reload the customers after coming back from creating new ones
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewCustomer()),
+    ).then((_) {
+      _loadCustomers(); // Reload the customers after coming back from creating new ones
     });
   }
 
+  void editCustomer(CustomerRecord customer) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewCustomer(customer: customer)),
+    ).then((_) {
+      _loadCustomers(); // Reload the customers after coming back from editing
+    });
+  }
+
+  void deleteCustomer(CustomerRecord customer) async {
+    await myDAO.deleteItem(customer);
+    setState(() {
+      customers.remove(customer);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +101,39 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.all(8),
                 itemCount: customers.length,
                 itemBuilder: (BuildContext context, int index) {
                   final customer = customers[index];
-                  return ListTile(
-                      title: Text("${customer.firstName} ${customer.lastName}"),
-                      subtitle: Text(customer.address)
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(10.0),
+                      title: Text("${customer.firstName} ${customer.lastName}", style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Address: ${customer.address}"),
+                          Text("Postal Code: ${customer.postalCode}"),
+                          Text("City: ${customer.city}"),
+                          Text("Country: ${customer.country}"),
+                          Text("Birthday: ${customer.birthday}"),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => editCustomer(customer),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () => deleteCustomer(customer),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 }
               )
