@@ -5,6 +5,7 @@ import 'CustomerRecord.dart';
 import 'CustomersDAO.dart';
 import 'CustomersDatabase.dart';
 import 'NewCustomer.dart';
+import 'EditCustomer.dart';
 
 class Customers extends StatelessWidget {
   const Customers({super.key});
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void editCustomer(CustomerRecord customer) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NewCustomer(customer: customer)),
+      MaterialPageRoute(builder: (context) => EditCustomer(customer: customer)),
     ).then((_) {
       _loadCustomers(); // Reload the customers after coming back from editing
     });
