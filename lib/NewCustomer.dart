@@ -7,7 +7,14 @@ import 'CustomersDAO.dart';
 import 'CustomersDatabase.dart';
 import 'AppLocalizations.dart';
 
+/// A widget that allows for the addition of a new customer or updating an existing customer.
+///
+/// This widget provides text fields for entering customer details and options to add or update the customer record.
 class NewCustomer extends StatefulWidget {
+  /// Creates a [NewCustomer] widget.
+  ///
+  /// The [customer] parameter is optional and can be used to initialize the widget
+  /// with an existing customer record.
   final CustomerRecord? customer;
 
   NewCustomer({this.customer});
@@ -17,7 +24,7 @@ class NewCustomer extends StatefulWidget {
 }
 
 class NewCustomerState extends State<NewCustomer> {
-  // Fields:
+  // Text controllers for the form fields
   late TextEditingController _controller_Fname;
   late TextEditingController _controller_Lname;
   late TextEditingController _controller_address;
@@ -25,8 +32,14 @@ class NewCustomerState extends State<NewCustomer> {
   late TextEditingController _controller_city;
   late TextEditingController _controller_country;
   late TextEditingController _controller_birthday;
+
+  // Data access object for interacting with the database
   late CustomersDAO myDAO;
+
+  // List of customer records fetched from the database
   var customer = <CustomerRecord>[];
+
+  // Encrypted shared preferences for securely storing customer data
   late EncryptedSharedPreferences _encryptedPrefs;
 
   @override
@@ -43,6 +56,7 @@ class NewCustomerState extends State<NewCustomer> {
         });
       });
     });
+    // Initialize text controllers with existing customer data if available
     _controller_Fname = TextEditingController(text: widget.customer?.firstName ?? '');
     _controller_Lname = TextEditingController(text: widget.customer?.lastName ?? '');
     _controller_address = TextEditingController(text: widget.customer?.address ?? '');
@@ -54,6 +68,7 @@ class NewCustomerState extends State<NewCustomer> {
 
   @override
   void dispose() {
+    // Dispose of the text controllers when the widget is disposed
     _controller_Fname.dispose();
     _controller_Lname.dispose();
     _controller_address.dispose();
@@ -64,6 +79,10 @@ class NewCustomerState extends State<NewCustomer> {
     super.dispose();
   }
 
+  /// Adds a new customer to the database or updates an existing customer record.
+  ///
+  /// If all fields are filled, the customer record will be added or updated in the database.
+  /// If any field is empty, an error dialog will be shown.
   Future<void> addCustomer() async {
     // If all fields are full, then add customer record to list
     if (_controller_Fname.text.isNotEmpty &&
@@ -116,7 +135,9 @@ class NewCustomerState extends State<NewCustomer> {
     }
   }
 
-  // Save the value of all the variables controllers in encrypted prefs
+  /// Saves the values from the text controllers to encrypted shared preferences.
+  ///
+  /// The values include first name, last name, address, postal code, city, country, and birthday.
   void saveSharedPrefs() async {
     await _encryptedPrefs.setString('fname', _controller_Fname.text);
     await _encryptedPrefs.setString('lname', _controller_Lname.text);
@@ -127,6 +148,9 @@ class NewCustomerState extends State<NewCustomer> {
     await _encryptedPrefs.setString('birthday', _controller_birthday.text);
   }
 
+  /// Loads the values from encrypted shared preferences into the text controllers.
+  ///
+  /// The values include first name, last name, address, postal code, city, country, and birthday.
   void loadSharedPrefs() async {
     String? fname = await _encryptedPrefs.getString('fname') ?? '';
     String? lname = await _encryptedPrefs.getString('lname') ?? '';

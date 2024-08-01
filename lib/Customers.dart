@@ -9,16 +9,20 @@ import 'NewCustomer.dart';
 import 'EditCustomer.dart';
 import 'AppLocalizations.dart';
 
+/// A stateful widget that displays a list of customers and supports multiple languages.
 
 class Customers extends StatefulWidget {
-  final Function(Locale) onLanguageChange; /// Callback to change language
+  /// Callback to change the language of the app.
+  final Function(Locale) onLanguageChange;
 
+  /// Creates a [Customers] widget.
   const Customers({super.key, required this.onLanguageChange});
 
   @override
   _CustomersState createState() => _CustomersState();
 }
 
+/// The state class for the [Customers] widget.
 class _CustomersState extends State<Customers> {
   late CustomersDAO myDAO;
   List<CustomerRecord> customers = [];
@@ -31,12 +35,21 @@ class _CustomersState extends State<Customers> {
     _loadCustomers();
   }
 
+  /// Changes the language of the app.
+  ///
+  /// This method is called when the user selects a different language
+  /// from the dropdown menu in the app bar.
+  ///
+  /// [newLocale] is the new locale to set for the app.
   void changeLanguage(Locale newLocale) {
     setState(() {
       locale = newLocale;
     });
   }
 
+  /// Loads the list of customers from the database.
+  ///
+  /// This method is called during initialization and after adding or editing a customer.
   void _loadCustomers() async {
     final database = await $FloorCustomersDatabase.databaseBuilder('app_database.db').build();
     myDAO = database.getDao;
@@ -45,6 +58,11 @@ class _CustomersState extends State<Customers> {
       customers = customerList;
     });
   }
+
+  /// Navigates to the [NewCustomer] screen.
+  ///
+  /// This method is called when the "Add new customer" button is clicked.
+  /// After returning from the [NewCustomer] screen, the list of customers is reloaded.
   void buttonClicked() {
     Navigator.push(
       context,
@@ -54,6 +72,12 @@ class _CustomersState extends State<Customers> {
     });
   }
 
+  /// Navigates to the [EditCustomer] screen.
+  ///
+  /// This method is called when the edit button is clicked for a specific customer.
+  /// After returning from the [EditCustomer] screen, the list of customers is reloaded.
+  ///
+  /// [customer] is the customer record to edit.
   void editCustomer(CustomerRecord customer) {
     Navigator.push(
       context,
@@ -63,6 +87,12 @@ class _CustomersState extends State<Customers> {
     });
   }
 
+  /// Deletes a customer from the database.
+  ///
+  /// This method is called when the delete button is clicked for a specific customer.
+  /// The customer is removed from the list of customers after deletion.
+  ///
+  /// [customer] is the customer record to delete.
   void deleteCustomer(CustomerRecord customer) async {
     await myDAO.deleteItem(customer);
     setState(() {
@@ -70,6 +100,11 @@ class _CustomersState extends State<Customers> {
     });
   }
 
+  /// Selects a customer to display their details.
+  ///
+  /// This method is called when a customer is tapped in the list.
+  ///
+  /// [customer] is the customer record to select.
   void selectCustomer(CustomerRecord customer) {
     setState(() {
       selectedCustomer = customer;
@@ -222,9 +257,13 @@ class _CustomersState extends State<Customers> {
   );
 }
 }
+
+/// A stateless widget that displays the details of a selected customer.
 class CustomerDetails extends StatelessWidget {
+  /// The customer record to display.
   final CustomerRecord customer;
 
+  /// Creates a [CustomerDetails] widget.
   CustomerDetails({required this.customer});
 
   @override

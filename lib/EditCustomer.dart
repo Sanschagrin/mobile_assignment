@@ -7,7 +7,14 @@ import 'CustomersDAO.dart';
 import 'CustomersDatabase.dart';
 import 'AppLocalizations.dart';
 
+/// A widget that allows for the editing of an existing customer or the creation of a new customer.
+///
+/// This widget provides text fields for editing customer details and options to update or delete the customer record.
 class EditCustomer extends StatefulWidget {
+  /// Creates an [EditCustomer] widget.
+  ///
+  /// The [customer] parameter is optional and can be used to initialize the widget
+  /// with an existing customer record.
   final CustomerRecord? customer;
 
   EditCustomer({this.customer});
@@ -65,6 +72,10 @@ class NewCustomerState extends State<EditCustomer> {
     super.dispose();
   }
 
+  /// Updates the customer record in the database and locally.
+  ///
+  /// If all fields are filled, the customer record will be updated in the database and locally.
+  /// If any field is empty, an error dialog will be shown.
   Future<void> updateCustomer() async {
     // If all fields are full, then add customer record to list
     if (_controller_Fname.text.isNotEmpty &&
@@ -115,8 +126,10 @@ class NewCustomerState extends State<EditCustomer> {
     }
   }
 
-  // Save the value of all the variables controllers in encrypted prefs
-  void saveSharedPrefs() async {
+  /// Saves the values from the text controllers to encrypted shared preferences.
+  ///
+  /// The values include first name, last name, address, postal code, city, country, and birthday.
+   void saveSharedPrefs() async {
     await _encryptedPrefs.setString('fname', _controller_Fname.text);
     await _encryptedPrefs.setString('lname', _controller_Lname.text);
     await _encryptedPrefs.setString('address', _controller_address.text);
@@ -125,7 +138,9 @@ class NewCustomerState extends State<EditCustomer> {
     await _encryptedPrefs.setString('country', _controller_country.text);
     await _encryptedPrefs.setString('birthday', _controller_birthday.text);
   }
-
+  /// Loads the values from encrypted shared preferences into the text controllers.
+  ///
+  /// The values include first name, last name, address, postal code, city, country, and birthday.
   void loadSharedPrefs() async {
     String? fname = await _encryptedPrefs.getString('fname') ?? '';
     String? lname = await _encryptedPrefs.getString('lname') ?? '';
@@ -145,6 +160,9 @@ class NewCustomerState extends State<EditCustomer> {
     });
   }
 
+  /// Deletes the specified customer record from the database and updates the local state.
+  ///
+  /// The customer record will be removed from the database and the local list of customers.
   void deleteCustomer(CustomerRecord customer) async {
     await myDAO.deleteItem(customer);
     setState(() {
