@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'CustomerRecord.dart';
 import 'CustomersDAO.dart';
 import 'CustomersDatabase.dart';
+import 'AppLocalizations.dart';
 
 class NewCustomer extends StatefulWidget {
   final CustomerRecord? customer;
@@ -101,12 +102,12 @@ class NewCustomerState extends State<NewCustomer> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please ensure all fields are filled'),
+            title: Text(AppLocalizations.of(context)?.translate('error') ?? 'Error'),
+            content: Text(AppLocalizations.of(context)?.translate('fill_all') ?? 'Please ensure all fields are filled'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Oki doki'),
+                child: const Text('Ok'),
               ),
             ],
           );
@@ -150,7 +151,29 @@ class NewCustomerState extends State<NewCustomer> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Add new customer:"),
+        actions: [IconButton(
+          icon: const Icon(Icons.help),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(AppLocalizations.of(context)?.translate('instructions') ?? 'Instructions'),
+                  content: Text(AppLocalizations.of(context)?.translate('new_cust_instruct') ?? "new cust"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    )
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        ],
+
+        title: Text(AppLocalizations.of(context)?.translate('add_new_customer') ?? "Add new customer:"),
       ),
       body: Center(
         child: Column(
@@ -160,8 +183,11 @@ class NewCustomerState extends State<NewCustomer> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text("Please fill out the following fields:"),
-
+                  Text(
+                      AppLocalizations.of(context)?.translate('fill_fields') ?? "Please fill out the following fields:",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                  ),
+                  SizedBox(height: 20),
                   // Text field for first name
                   TextField(
                     key: ValueKey("firstName"),
@@ -169,9 +195,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "First name",
+                      labelText: AppLocalizations.of(context)?.translate('first_name') ?? "First name",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for last name
                   TextField(
@@ -180,9 +207,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "Last name",
+                      labelText: AppLocalizations.of(context)?.translate('last_name') ?? "Last name",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for address
                   TextField(
@@ -191,9 +219,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "Address",
+                      labelText: AppLocalizations.of(context)?.translate('address') ??"Address",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for postal code
                   // Add verification for format
@@ -203,9 +232,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "Postal code",
+                      labelText: AppLocalizations.of(context)?.translate('postal') ??"Postal code",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for city
                   TextField(
@@ -214,9 +244,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "City",
+                      labelText: AppLocalizations.of(context)?.translate('city') ?? "City",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for country
                   // Make drop down?
@@ -226,9 +257,10 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "Country",
+                      labelText: AppLocalizations.of(context)?.translate('country') ?? "Country",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Text field for birthday
                   // Add date selector?
@@ -238,21 +270,23 @@ class NewCustomerState extends State<NewCustomer> {
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       border: OutlineInputBorder(),
-                      labelText: "Birthday",
+                      labelText: AppLocalizations.of(context)?.translate('birthdate') ?? "Birthdate",
                     ),
                   ),
+                  SizedBox(height: 16),
 
                   // Buttons for adding a customer and loading shared preferences
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
                         onPressed: addCustomer,
-                        child: Text("Add Customer"),
+                        child: Text(AppLocalizations.of(context)?.translate('add') ??"Add Customer"),
                       ),
-                      SizedBox(width: 10), // Space between buttons
+                      SizedBox(width: 20), // Space between buttons
                       ElevatedButton(
                         onPressed: loadSharedPrefs,
-                        child: Text("Load Last Customer Info"),
+                        child: Text(AppLocalizations.of(context)?.translate('load_cust') ?? "Load Last Customer Info"),
                       ),
                     ],
                   ),

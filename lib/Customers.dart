@@ -1,48 +1,39 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 //class imports
 import 'CustomerRecord.dart';
 import 'CustomersDAO.dart';
 import 'CustomersDatabase.dart';
 import 'NewCustomer.dart';
 import 'EditCustomer.dart';
+import 'AppLocalizations.dart';
 
-class Customers extends StatelessWidget {
-  const Customers({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Customers',
-      routes: {
-        '/newCust': (context) => NewCustomer()
-      },
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Customer page'),
-    );
-  }
-}
+class Customers extends StatefulWidget {
+  final Function(Locale) onLanguageChange; /// Callback to change language
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const Customers({super.key, required this.onLanguageChange});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _CustomersState createState() => _CustomersState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _CustomersState extends State<Customers> {
   late CustomersDAO myDAO;
   List<CustomerRecord> customers = [];
+  Locale locale = Locale('en'); ///set english to default language
 
   @override
   void initState() {
     super.initState();
     _loadCustomers();
+    print('onLanguageChange: ${widget.onLanguageChange}'); // Debug print
+  }
+  void changeLanguage(Locale newLocale) {
+    setState(() {
+      locale = newLocale;
+    });
   }
 
   void _loadCustomers() async {
@@ -80,10 +71,77 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+          useMaterial3: true,
+        ),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('fr'),
+        ],
+      locale: locale,
+    home: Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        actions: [
+          DropdownButton<Locale>(
+            value: Localizations.localeOf(context),
+            icon: const Icon(Icons.language),
+            onChanged: (Locale? newLocale) {
+              if (newLocale != null) {
+                widget.onLanguageChange(newLocale);
+                setState(() {
+                  locale = newLocale; // Update the local variables
+                });
+              }
+            },
+            items: const [
+              DropdownMenuItem(
+                value: Locale('en'),
+                child: Text('English'),
+              ),
+              DropdownMenuItem(
+                value: Locale('fr'),
+                child: Text('French'),
+              ),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.help),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(AppLocalizations.of(context)?.translate('instructions') ?? 'Instructions'),
+                    content: Text(AppLocalizations.of(context)?.translate('cust_instruct') ?? "browse cust"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+        title: Text(AppLocalizations.of(context)?.translate('customers') ?? 'Customers'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context, '/pageOne');
+          },
+        ),
       ),
       body: Center(
         child: Column(
@@ -95,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     ElevatedButton(
                         onPressed:buttonClicked,
-                        child: Text ("Add new customer")
+                        child: Text (AppLocalizations.of(context)?.translate('add_new_customer') ?? "Add new customer")
                     ),
                   ],
                 ),
@@ -114,11 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Address: ${customer.address}"),
-                          Text("Postal Code: ${customer.postalCode}"),
-                          Text("City: ${customer.city}"),
-                          Text("Country: ${customer.country}"),
-                          Text("Birthday: ${customer.birthday}"),
+                          Text("${customer.address}" " " "${customer.postalCode}" " " "${customer.city}" " " "${customer.country}"),
+                          Text("${customer.birthday}"),
                         ],
                       ),
                       trailing: Row(
@@ -142,6 +197,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ]
         ),
       ),
-    );
+    ));
   }
 }

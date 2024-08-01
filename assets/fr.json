@@ -43,5 +43,28 @@
 "sel_flight": "Sélectionner un vol",
 "sel_customer": "Sélectionner un client",
 "sel_date": "Sélectionner une date",
-  "item_add": "Article ajouté:"
+  "item_add": "Article ajouté:",
+
+
+"error": "Erreur:",
+"add_new_customer": "Ajouter un nouveau client",
+"fill_fields": "Remplisser les champs suivant SVP:",
+"address": "Addresse",
+"postal" : "Code postal",
+"city" : "Ville",
+"country" : "Pays",
+"birthdate" : "Date de naissance",
+"add" : "Ajouter",
+"load_cust" : "Remplir avec les informations du dernier client",
+
+"customers" : "Clients",
+  "cust_instruct": "Ici vous pouvez rechercher les clients. Il faut pèser le boutton pour la modification pour modifier les champs d'un client, et le boutton pour supprimer enlève le client de la liste.",
+  "new_cust_instruct" : "Remplisser tout les champs avec l'information requise, ensuite pèser sur le boutton 'ajouter'. Le boutton 'Remplir avec les informations du dernier client' rempli les champs avec les informations du client précédent.",
+  "edit_cust_instruct" : "Met à jour les champs avec les nouvelles informations et pèse sur le boutton 'mettre à jour'.",
+
+  "edit_customer": "Modifier un client",
+"update" : "Mettre à jour"
+
+
+
 }

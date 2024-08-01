@@ -44,5 +44,24 @@
   "sel_flight": "Select Flight",
   "sel_customer": "Select Customer",
   "sel_date": "Select Date",
-  "item_add": "Item Added:"
+  "item_add": "Item Added:",
+
+  "error": "Error:",
+  "add_new_customer": "Add new customer",
+  "fill_fields": "Please fill all of the fields:",
+  "address": "Address",
+  "postal" : "Postal Code",
+  "city" : "City",
+  "country" : "Country",
+  "birthdate" : "Date of Birth",
+  "add" : "Add",
+  "load_cust" : "Load last customer's information",
+
+  "customers" : "Customers",
+  "cust_instruct": "Browse customers and click the edit button to update any of their fields, or the delete button to delete a record.",
+  "new_cust_instruct" : "Fill all of the fields with the requested information then click the 'add' button. The 'load last customer's information' button loads the information that was previously entered into the fields.",
+  "edit_cust_instruct" : "Update the fields with the new information then click the 'update' button.",
+  "edit_customer": "Edit customer",
+  "update" : "Update"
+
 }

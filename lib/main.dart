@@ -37,7 +37,7 @@ class MyApp extends StatefulWidget {
       routes: {
         '/pageOne'   :   (context) => const LandingPage(title: 'Welcome to BOEING'),
         '/pageTwo'  :    (context) => Reservations(onLanguageChange: _changeLanguage),
-        '/pageThree' : (context) => const Customers(),
+        '/pageThree' : (context) => Customers(onLanguageChange: _changeLanguage),
         '/pageFour' : (context) => const Airplanes(),
         '/pageFive' : (context) => const Flights(),
         '/bookings' : (context) => const Bookings(),
