@@ -77,12 +77,12 @@ class _$ReservationDatabase extends ReservationDatabase {
   ReservationsDAO? _getDaoInstance;
 
   Future<sqflite.Database> open(
-    String path,
-    List<Migration> migrations, [
-    Callback? callback,
-  ]) async {
+      String path,
+      List<Migration> migrations, [
+        Callback? callback,
+      ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 3,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -99,8 +99,6 @@ class _$ReservationDatabase extends ReservationDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ReservationList` (`id` INTEGER NOT NULL, `flight` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `destination` TEXT NOT NULL, `departure` TEXT NOT NULL, `takeOff` TEXT NOT NULL, `arrival` TEXT NOT NULL, `date` TEXT NOT NULL, PRIMARY KEY (`id`))');
-        await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CustomerRecord` (`id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `postalCode` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `birthday` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,53 +114,53 @@ class _$ReservationDatabase extends ReservationDatabase {
 
 class _$ReservationsDAO extends ReservationsDAO {
   _$ReservationsDAO(
-    this.database,
-    this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database),
+      this.database,
+      this.changeListener,
+      )   : _queryAdapter = QueryAdapter(database),
         _reservationListInsertionAdapter = InsertionAdapter(
             database,
             'ReservationList',
-            (ReservationList item) => <String, Object?>{
-                  'id': item.id,
-                  'flight': item.flight,
-                  'firstName': item.firstName,
-                  'lastName': item.lastName,
-                  'destination': item.destination,
-                  'departure': item.departure,
-                  'takeOff': item.takeOff,
-                  'arrival': item.arrival,
-                  'date': item.date
-                }),
+                (ReservationList item) => <String, Object?>{
+              'id': item.id,
+              'flight': item.flight,
+              'firstName': item.firstName,
+              'lastName': item.lastName,
+              'destination': item.destination,
+              'departure': item.departure,
+              'takeOff': item.takeOff,
+              'arrival': item.arrival,
+              'date': item.date
+            }),
         _reservationListUpdateAdapter = UpdateAdapter(
             database,
             'ReservationList',
             ['id'],
-            (ReservationList item) => <String, Object?>{
-                  'id': item.id,
-                  'flight': item.flight,
-                  'firstName': item.firstName,
-                  'lastName': item.lastName,
-                  'destination': item.destination,
-                  'departure': item.departure,
-                  'takeOff': item.takeOff,
-                  'arrival': item.arrival,
-                  'date': item.date
-                }),
+                (ReservationList item) => <String, Object?>{
+              'id': item.id,
+              'flight': item.flight,
+              'firstName': item.firstName,
+              'lastName': item.lastName,
+              'destination': item.destination,
+              'departure': item.departure,
+              'takeOff': item.takeOff,
+              'arrival': item.arrival,
+              'date': item.date
+            }),
         _reservationListDeletionAdapter = DeletionAdapter(
             database,
             'ReservationList',
             ['id'],
-            (ReservationList item) => <String, Object?>{
-                  'id': item.id,
-                  'flight': item.flight,
-                  'firstName': item.firstName,
-                  'lastName': item.lastName,
-                  'destination': item.destination,
-                  'departure': item.departure,
-                  'takeOff': item.takeOff,
-                  'arrival': item.arrival,
-                  'date': item.date
-                });
+                (ReservationList item) => <String, Object?>{
+              'id': item.id,
+              'flight': item.flight,
+              'firstName': item.firstName,
+              'lastName': item.lastName,
+              'destination': item.destination,
+              'departure': item.departure,
+              'takeOff': item.takeOff,
+              'arrival': item.arrival,
+              'date': item.date
+            });
 
   final sqflite.DatabaseExecutor database;
 
