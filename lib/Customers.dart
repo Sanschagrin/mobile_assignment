@@ -23,13 +23,14 @@ class _CustomersState extends State<Customers> {
   late CustomersDAO myDAO;
   List<CustomerRecord> customers = [];
   Locale locale = Locale('en'); ///set english to default language
+  CustomerRecord? selectedCustomer;
 
   @override
   void initState() {
     super.initState();
     _loadCustomers();
-    print('onLanguageChange: ${widget.onLanguageChange}'); // Debug print
   }
+
   void changeLanguage(Locale newLocale) {
     setState(() {
       locale = newLocale;
@@ -69,8 +70,16 @@ class _CustomersState extends State<Customers> {
     });
   }
 
+  void selectCustomer(CustomerRecord customer) {
+    setState(() {
+      selectedCustomer = customer;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isTabletOrDesktop = MediaQuery.of(context).size.width > 600;
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -144,59 +153,96 @@ class _CustomersState extends State<Customers> {
         ),
       ),
       body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                        onPressed:buttonClicked,
-                        child: Text (AppLocalizations.of(context)?.translate('add_new_customer') ?? "Add new customer")
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed:buttonClicked,
+                            child: Text (AppLocalizations.of(context)?.translate('add_new_customer') ?? "Add new customer")
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                  Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: customers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final customer = customers[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(10.0),
+                          title: Text("${customer.firstName} ${customer.lastName}", style: TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${customer.address}" " " "${customer.postalCode}" " " "${customer.city}" " " "${customer.country}"),
+                              Text("${customer.birthday}"),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () => editCustomer(customer),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () => deleteCustomer(customer),
+                              ),
+                            ],
+                          ),
+                          onTap: () => selectCustomer(customer),
+                        ),
+                      );
+                    }
+                  ),
                 ),
-              ),
-              Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: customers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final customer = customers[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(10.0),
-                      title: Text("${customer.firstName} ${customer.lastName}", style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("${customer.address}" " " "${customer.postalCode}" " " "${customer.city}" " " "${customer.country}"),
-                          Text("${customer.birthday}"),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () => editCustomer(customer),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => deleteCustomer(customer),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-              )
-              )
-            ]
+              ],
+            ),
+          ),
+          if (isTabletOrDesktop && selectedCustomer != null) Expanded(
+          flex: 3,
+          child: CustomerDetails(customer: selectedCustomer!),
+          ),
+        ],
         ),
       ),
-    ));
+    ),
+  );
+}
+}
+class CustomerDetails extends StatelessWidget {
+  final CustomerRecord customer;
+
+  CustomerDetails({required this.customer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("${AppLocalizations.of(context)?.translate('first_name') ?? 'First Name'}: ${customer.firstName}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text("${AppLocalizations.of(context)?.translate('last_name') ?? 'First Name'}: ${customer.lastName}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text("${AppLocalizations.of(context)?.translate('address') ?? 'First Name'}: ${customer.address}"),
+          Text("${AppLocalizations.of(context)?.translate('postal') ?? 'First Name'}: ${customer.postalCode}"),
+          Text("${AppLocalizations.of(context)?.translate('city') ?? 'First Name'}: ${customer.city}"),
+          Text("${AppLocalizations.of(context)?.translate('country') ?? 'First Name'}: ${customer.country}"),
+          Text("${AppLocalizations.of(context)?.translate('birthdate') ?? 'First Name'}: ${customer.birthday}"),
+        ],
+      ),
+    );
   }
 }
