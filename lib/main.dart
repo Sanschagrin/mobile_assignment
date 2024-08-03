@@ -39,7 +39,7 @@ class MyApp extends StatefulWidget {
         '/pageTwo'  :    (context) => Reservations(onLanguageChange: _changeLanguage),
         '/pageThree' : (context) => const Customers(),
         '/pageFour' : (context) => const Airplanes(),
-        '/pageFive' : (context) => Flights(),
+        '/pageFive' : (context) => FlightsPage(),
         '/bookings' : (context) => const Bookings(),
         '/ReserveExisting' : (context) => const ReserveExisting(),
 
